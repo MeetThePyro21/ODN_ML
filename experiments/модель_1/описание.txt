@@ -1,0 +1,13 @@
+input_ = keras.layers.Input(shape=[None, n])
+layer1 = keras.layers.LSTM(n, return_sequences=True)(input_)
+dense_layer = keras.layers.Dense(n)(layer1[:, -target_size:, :])
+model = keras.Model(inputs=[input_], outputs=[dense_layer])
+
+optimizer = tf.keras.optimizers.Adam(
+    learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-07, amsgrad=False,
+    name='Adam')
+
+model.compile(loss="mae", optimizer=optimizer)
+
+history = model.fit(X_train, y_train, epochs=300, batch_size=10,
+                    validation_data=(X_val, y_val))
